@@ -17,7 +17,7 @@ RSpec.describe ClientLoader do
         clients = subject.load_clients('spec/fixtures/clients.json')
         expect(clients).to be_an(Array)
         expect(clients.length).to eq(3)
-        expect(clients.first).to include(:id, :name, :email)
+        expect(clients.first).to include(:id, :full_name, :email)
       end
     end
 
@@ -49,14 +49,14 @@ RSpec.describe ClientLoader do
   describe '.valid_client?' do
     context 'when the client is valid' do
       it 'returns true' do
-        client = { id: 1, name: 'Jane Doe', email: 'jane@example.com' }
+        client = { id: 1, full_name: 'Jane Doe', email: 'jane@example.com' }
         expect(subject.valid_client?(client)).to be true
       end
     end
 
     context 'when the client is invalid' do
       it 'returns false' do
-        client = { id: 1, name: 'Jane Doe' }
+        client = { id: 1, full_name: 'Jane Doe' }
         expect(subject.valid_client?(client)).to be false
       end
     end

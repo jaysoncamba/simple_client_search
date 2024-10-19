@@ -9,7 +9,7 @@ class ClientLoader
     # Validate each client
     clients.each do |client|
       unless valid_client?(client)
-        puts "Invalid client entry: #{client}. Each client must have 'id', 'name', and 'email'."
+        puts "Invalid client entry: #{client}. Each client must have 'id', 'full_name', and 'email'."
         exit
       end
     end
@@ -24,6 +24,6 @@ class ClientLoader
   end
 
   def self.valid_client?(client)
-    client.key?(:id) && client.key?(:name) && client.key?(:email)
+    client.key?(:id) && client.key?(:full_name) && client.key?(:email)
   end
 end

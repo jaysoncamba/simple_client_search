@@ -11,7 +11,7 @@ class ClientSearch
     if results.empty?
       puts "No clients found with the #{field} containing '#{query}'."
     else
-      results.each { |client| puts "Found: #{client[:name]} (#{client[:email]})" }
+      results.each { |client| puts "Found: #{client[:full_name]} (#{client[:email]})" }
     end
   end
 
@@ -54,10 +54,10 @@ when 'search'
     field = ARGV[1].to_sym
     query = ARGV[2]
     
-    if [:id, :name, :email].include?(field)
+    if [:id, :full_name, :email].include?(field)
       client_search.search(query, field)
     else
-      puts "Invalid search field. Use 'id', 'name', or 'email'."
+      puts "Invalid search field. Use 'id', 'full_name', or 'email'."
     end
   end
 when 'duplicates'

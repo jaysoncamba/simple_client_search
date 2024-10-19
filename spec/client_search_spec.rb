@@ -10,9 +10,9 @@ RSpec.describe ClientSearch do
   end
 
   describe '#search' do
-    context 'when searching by name' do
+    context 'when searching by full_name' do
       it 'finds clients' do
-        expect { subject.search('John', :name) }.to output(/Found: John Doe \(john@example.com\)/).to_stdout
+        expect { subject.search('John', :full_name) }.to output(/Found: John Doe \(john@example.com\)/).to_stdout
       end
     end
 
@@ -24,7 +24,7 @@ RSpec.describe ClientSearch do
 
     context 'when the query does not match any clients' do
       it 'outputs no results' do
-        expect { subject.search('Nonexistent', :name) }.to output(/No clients found/).to_stdout
+        expect { subject.search('Nonexistent', :full_name) }.to output(/No clients found/).to_stdout
       end
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe ClientSearch do
 
     context 'when there are no duplicates' do
       before do
-        unique_clients = [{ id: 1, name: 'John Doe', email: 'john@example.com' }]
+        unique_clients = [{ id: 1, full_name: 'John Doe', email: 'john@example.com' }]
         allow(ClientLoader).to receive(:load_clients).and_return(unique_clients)
       end
 
