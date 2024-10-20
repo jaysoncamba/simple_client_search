@@ -44,7 +44,8 @@ gem install rspec
 To run the tests, use the following command:
 
 ```bash
-rspec spec/
+rspec spec
+rspec spec/client_search_spec.rb
 ```
 
 ## Usage
@@ -52,19 +53,29 @@ rspec spec/
 To run the application, use the following command format:
 
 ```bash
-ruby client_search.rb [command] [options] [file_path]
+ruby script.rb --command=<command> --field=<field> --query=<query> --file_path=<file_path>
 ```
 
-### Commands
+### Parameters
+You can pass the following parameters:
 
-* search [field] [query]: Search for clients by specified field (id, name, email).
-* duplicates: Find duplicate emails.
+* `--command=<command>`: Specifies the action to perform.
+  Valid values:
+    * `search`: Searches for a client based on the specified field and query.
+    * `duplicates`: Finds clients with duplicate email addresses.
+    * `--field=<field>`: Defines the field to search in.
+      Valid fields:
+        * id
+        * full_name (default)
+        * email
+    * `--query=<query>`: The search term for the specified field.
+    * `--file_path=<file_path>`: The path to the JSON file containing client data. Defaults to `clients.json`.
 
 ### Example Usage
 
 ```bash
-ruby client_search.rb search name "John"
-ruby client_search.rb duplicates
+ruby client_search.rb --command="search" --query="JOHN"
+ruby client_search.rb --command=duplicates
 ```
 
 ## Project Structure

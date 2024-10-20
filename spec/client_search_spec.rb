@@ -29,10 +29,10 @@ RSpec.describe ClientSearch do
     end
   end
 
-  describe '#find_duplicate_emails' do
+  describe '#find_duplicates' do
     context 'when there are duplicate emails' do
       it 'identifies them' do
-        expect { subject.find_duplicate_emails }.to output(/Duplicate email: john@example.com \(2 occurrences\)/).to_stdout
+        expect { subject.find_duplicates }.to output(/Duplicate email: john@example.com \(2 occurrences\)/).to_stdout
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe ClientSearch do
       end
 
       it 'outputs no duplicates' do
-        expect { subject.find_duplicate_emails }.to output(/No duplicate emails found/).to_stdout
+        expect { subject.find_duplicates }.to output(/No duplicate email found/).to_stdout
       end
     end
   end

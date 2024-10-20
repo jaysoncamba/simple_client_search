@@ -7,7 +7,9 @@ class ClientSearch
   end
 
   def search(query, field)
-    results = @clients.select { |client| client[field].to_s.downcase.include?(query.downcase) }
+    results = @clients.select { |client|
+      client[field.to_sym].to_s.downcase.include?(query.downcase)
+    }
     if results.empty?
       puts "No clients found with the #{field} containing '#{query}'."
     else
@@ -15,17 +17,17 @@ class ClientSearch
     end
   end
 
-  def find_duplicate_emails
-    email_counts = Hash.new(0)
+  def find_duplicates(field = :email)
+    field_counts = Hash.new(0)
 
     @clients.each do |client|
-      email_counts[client[:email]] += 1
+      field_counts[client[field.to_sym]] += 1
     end
 
-    duplicates = email_counts.select { |_, count| count > 1 }
+    duplicates = field_counts.select { |_, count| count > 1 }
 
     if duplicates.empty?
-      puts "No duplicate emails found."
+      puts "No duplicate #{field} found."
     else
       duplicates.each do |email, count|
         puts "Duplicate email: #{email} (#{count} occurrences)"
@@ -42,26 +44,41 @@ if ARGV.empty?
   exit
 end
 
-command = ARGV[0]
-file_path = ARGV[2] if ARGV.length > 2
+
+# Define allowed parameters
+allowed_params = %w[command field query file_path]
+
+# Initialize a hash to store whitelisted arguments
+params = {}
+
+# Parse ARGV
+ARGV.each do |arg|
+  key, value = arg.split('=')
+  key = key.gsub('--', '')
+
+  if allowed_params.include?(key)
+    params[key.to_sym] = value
+  else
+    puts "Warning: Ignoring unknown parameter --#{key}"
+  end
+end
+
+command = params[:command]
+field = params[:field]&.to_sym || :full_name
+query = params[:query]
+file_path = params[:file_path] || "clients.json"
+
 client_search = ClientSearch.new(file_path)
 
-case command
-when 'search'
-  if ARGV.length < 3
-    puts "Usage: ruby client_search.rb search [field] [query] [file_path]"
-  else
-    field = ARGV[1].to_sym
-    query = ARGV[2]
-    
-    if [:id, :full_name, :email].include?(field)
+if [:id, :full_name, :email].include?(field)
+  case command
+    when 'search'
       client_search.search(query, field)
+    when 'duplicates'
+      client_search.find_duplicates(field)
     else
-      puts "Invalid search field. Use 'id', 'full_name', or 'email'."
-    end
+      puts "Unknown command: #{command}"
   end
-when 'duplicates'
-  client_search.find_duplicate_emails
 else
-  puts "Unknown command: #{command}"
+  puts "Invalid search field. Use 'id', 'full_name', or 'email'."
 end
